@@ -23,7 +23,7 @@
 
 .char {
   width: 200px;
-  height: 250px;
+  height: 285px;
   border: 2px solid black;
   margin-bottom: 1rem;
 }
@@ -38,6 +38,12 @@
 .charText {
   margin-left: 0.5rem;
   font-size: 0.75rem;
+}
+
+.charText-title {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: bold;
 }
 
 .charButton {
