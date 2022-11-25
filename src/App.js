@@ -69,7 +69,7 @@ function App() {
   useEffect(() => {
     let promises = [];
     names.forEach((name) => {
-      // Remove characters that are too new to have images or are not obtainable through the gacha system
+      // Remove characters that are not obtainable through the gacha system
       // TODO: Add title to Collei: "Avidya Forest Ranger Trainee"
       if (
         name !== "aloy" &&
@@ -91,23 +91,6 @@ function App() {
         console.log(error);
       });
   }, [names]);
-
-  // Handle sorting
-  function handleSort(event) {
-    let sortedData = [...allData];
-    switch (event.target.value) {
-      case "name":
-        sortedData.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "title":
-        sortedData.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      default:
-        break;
-    }
-    setFilteredData(sortedData);
-    setSortMode(event.target.value);
-  }
 
   // Handle filtering
   function handleFilter(event) {
@@ -208,6 +191,23 @@ function App() {
     }
     setFilteredData(filteredData);
     setFilterMode(event.target.value);
+  }
+
+  // Handle sorting
+  function handleSort(event) {
+    let sortedData = [...allData];
+    switch (event.target.value) {
+      case "name":
+        sortedData.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "title":
+        sortedData.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      default:
+        break;
+    }
+    setFilteredData(sortedData);
+    setSortMode(event.target.value);
   }
 
   // Reset all sorting and filtering
