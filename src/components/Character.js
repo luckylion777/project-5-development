@@ -21,12 +21,36 @@ export default function Character(props) {
 
   return (
     <div className="char">
-      <img src={ "https://api.genshin.dev/characters/" + props.item.name.replace(' ', '-').toLowerCase().replace('kamisato-', '').replace('kaedehara-', '').replace('sangonomiya-', '').replace('-shogun', '').replace('kujou-', '') + "/icon-big" } alt={ props.item.name } className="charImg"/>
-      <p className="charText-title">{ props.item.name }</p>
-      <p className="charText"><i>{ props.item.title }</i></p>
-      <p className="charText">{ props.item.rarity }&#9733;, { props.item.vision }, { props.item.weapon }, { props.item.nation }</p>
-      <button onClick={ addToWishlist } className="charButton">Add to Wishlist</button>
-      <button onClick={ removeFromWishlist } className="charButton">Remove from Wishlist</button>
+      <img
+        src={
+          "https://api.genshin.dev/characters/" +
+          props.item.name
+            .replace(" ", "-")
+            .toLowerCase()
+            .replace("kamisato-", "")
+            .replace("kaedehara-", "")
+            .replace("sangonomiya-", "")
+            .replace("-shogun", "")
+            .replace("kujou-", "") +
+          "/icon-big"
+        }
+        alt={props.item.name}
+        className="charImg"
+      />
+      <p className="charText-title">{props.item.name}</p>
+      <p className="charText">
+        <i>{props.item.title}</i>
+      </p>
+      <p className="charText">
+        {props.item.rarity}&#9733;, {props.item.vision}, {props.item.weapon},{" "}
+        {props.item.nation}
+      </p>
+      <button onClick={addToWishlist} className="charButton">
+        Add to Wishlist
+      </button>
+      <button onClick={removeFromWishlist} className="charButton">
+        Remove from Wishlist
+      </button>
     </div>
   );
-}    
+}

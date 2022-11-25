@@ -2,6 +2,22 @@
   padding-left: 10rem;
 }
 
+.optionMenu {
+  width: 70%;
+  margin-bottom: 1rem;
+}
+
+.sortMenu {
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+}
+
+.appContainer {
+  display: flex;
+  flex-direction: row;
+}
+
 .characters {
   width: 70%;
   display: flex;
@@ -48,9 +64,4 @@
 
 .charButton {
   margin-left: 0.5rem;
-}
-
-.appContainer {
-  display: flex;
-  flex-direction: row;
 }
