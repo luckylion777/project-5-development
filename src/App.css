@@ -62,6 +62,26 @@
   font-weight: bold;
 }
 
-.charButton {
+.charButton-add {
   margin-left: 0.5rem;
+  background-color: white; 
+  color: 1976d2; 
+  border: 2px solid #42a5f5;
+}
+
+.charButton-add:hover {
+  background-color: #42a5f5;
+  color: white;
+}
+
+.charButton-remove {
+  margin-left: 0.5rem;
+  background-color: white; 
+  color: black; 
+  border: 2px solid #D3D3D3;
+}
+
+.charButton-remove:hover {
+  background-color: #D3D3D3;
+  color: white;
 }

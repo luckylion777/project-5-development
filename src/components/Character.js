@@ -45,10 +45,10 @@ export default function Character(props) {
         {props.item.rarity}&#9733;, {props.item.vision}, {props.item.weapon},{" "}
         {props.item.nation}
       </p>
-      <button onClick={addToWishlist} className="charButton">
+      <button onClick={addToWishlist} className="charButton-add">
         Add to Wishlist
       </button>
-      <button onClick={removeFromWishlist} className="charButton">
+      <button onClick={removeFromWishlist} className="charButton-remove">
         Remove from Wishlist
       </button>
     </div>

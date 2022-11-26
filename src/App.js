@@ -99,11 +99,19 @@ function App() {
       });
   }, [names]);
 
-  // Handle filtering with multiple filters
+  // Handle filter mode changes
   function handleFilter(event) {
-    let filteredData = [...someData];
-    let filterMode = [...event.target.value];
-    setFilterMode(filterMode);
+    setFilterMode(event.target.value);
+  }
+
+  // Handle sort mode changes
+  function handleSort(event) {
+    setSortMode(event.target.value);
+  }
+
+  // Handle filtering and sorting
+  useEffect(() => {
+    let filteredData = [...allData];
     if (filterMode.length > 0) {
       filterMode.forEach((filter) => {
         filteredData = filteredData.filter((character) => {
@@ -116,26 +124,17 @@ function App() {
         });
       });
     }
-    setSomeData(filteredData);
-    setFilterMode(event.target.value);
-  }
-
-  // Handle sorting with single criteria
-  function handleSort(event) {
-    let sortedData = [...someData];
-    switch (event.target.value) {
-      case "name":
-        sortedData.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "title":
-        sortedData.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      default:
-        break;
+    if (sortMode === "name") {
+      filteredData.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+    } else if (sortMode === "title") {
+      filteredData.sort((a, b) => {
+        return a.title.localeCompare(b.title);
+      });
     }
-    setSomeData(sortedData);
-    setSortMode(event.target.value);
-  }
+    setSomeData(filteredData);
+  }, [filterMode, sortMode, allData]);
 
   // Reset all sorting and filtering
   function handleReset() {
@@ -149,8 +148,8 @@ function App() {
       <h1>Genshin Impact Wishlist Tracker</h1>
       <div className="optionMenu">
         {/* Form for sorting */}
-        <FormControl size="small" sx={{ mr: 1, width: 230 }}>
-          <InputLabel>Sort by</InputLabel>
+        <FormControl size="small" sx={{ mr: 1, width: 0.24 }}>
+          <InputLabel>Sort By</InputLabel>
           <Select value={sortMode} label="Sort mode" onChange={handleSort}>
             <MenuItem value="">
               <em>None</em>
@@ -160,8 +159,8 @@ function App() {
           </Select>
         </FormControl>
         {/* Form for filtering */}
-        <FormControl size="small" sx={{ mr: 1, width: 610 }}>
-          <InputLabel>Filter by</InputLabel>
+        <FormControl size="small" sx={{ mr: 1, width: 0.5 }}>
+          <InputLabel>Filter By</InputLabel>
           <Select
             multiple
             value={filterMode}
@@ -181,7 +180,12 @@ function App() {
         {/* Resets the sorting and filtering */}
         <Button
           variant="outlined"
-          size="medium"
+          sx={{
+            height: 40,
+            width: 0.24,
+            textTransform: "capitalize",
+            fontSize: 16,
+          }}
           onClick={() => {
             handleReset();
           }}
@@ -207,22 +211,28 @@ function App() {
           <h2>My Wishlist</h2>
           <p>
             Total: {total}&#9733;
+            <br />
             {/* Resets the entire wishlist */}
-            <button
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{
+                mt: 1,
+                textTransform: "capitalize",
+              }}
               onClick={() => {
                 setWishlist(Array(wishlist.length).fill(0));
                 setTotal(0);
               }}
-              className="charButton"
             >
               Reset Wishlist
-            </button>
+            </Button>
             {wishlist.map((item, index) => {
-              // index = allData.indexOf(someData[index]);
               if (item > 0) {
                 return (
                   <p>
-                    {item}x {allData[index].name} {}
+                    {item}x {someData[index].name} {}
+                    {/* TODO: Fix bug where you can make count go negative */}
                     {/* Add a copy of a character to the wishlist */}
                     <button
                       onClick={() => {
@@ -233,7 +243,7 @@ function App() {
                           return newWishlist;
                         });
                       }}
-                      className="charButton"
+                      className="charButton-add"
                     >
                       +
                     </button>
@@ -249,7 +259,7 @@ function App() {
                           return newWishlist;
                         });
                       }}
-                      className="charButton"
+                      className="charButton-remove"
                     >
                       -
                     </button>
