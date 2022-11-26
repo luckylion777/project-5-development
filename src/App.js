@@ -14,7 +14,7 @@ import Checkbox from "@mui/material/Checkbox";
 function App() {
   const [names, setNames] = useState([]);
   const [allData, setAllData] = useState([]);
-  const [filteredData, setFilteredData] = useState(allData);
+  const [someData, setSomeData] = useState(allData);
   const [wishlist, setWishlist] = useState([]);
   const [total, setTotal] = useState(0);
   const [filterMode, setFilterMode] = useState([]);
@@ -70,7 +70,6 @@ function App() {
     let promises = [];
     names.forEach((name) => {
       // Remove characters that are not obtainable through the gacha system
-      // TODO: Add title to Collei: "Avidya Forest Ranger Trainee"
       if (
         name !== "aloy" &&
         name !== "traveler-anemo" &&
@@ -83,8 +82,16 @@ function App() {
     });
     Promise.all(promises)
       .then((response) => {
-        setAllData(response.map((res) => res.data));
-        setFilteredData(response.map((res) => res.data));
+        // Add missing title to Collei: "Avidya Forest Ranger Trainee"
+        setAllData(
+          response.map((res) => {
+            if (res.data.name === "Collei") {
+              res.data.title = "Avidya Forest Ranger Trainee";
+            }
+            return res.data;
+          })
+        );
+        setSomeData(response.map((res) => res.data));
         setWishlist(Array(response.length).fill(0));
       })
       .catch((error) => {
@@ -92,110 +99,30 @@ function App() {
       });
   }, [names]);
 
-  // Handle filtering
+  // Handle filtering with multiple filters
   function handleFilter(event) {
-    let filteredData = [...allData];
-    switch (event.target.value) {
-      case "5*":
-        filteredData = filteredData.filter(
-          (character) => character.rarity === 5
-        );
-        break;
-      case "4*":
-        filteredData = filteredData.filter(
-          (character) => character.rarity === 4
-        );
-        break;
-      case "Pyro":
-        filteredData = filteredData.filter(
-          (character) => character.vision === "Pyro"
-        );
-        break;
-      case "Hydro":
-        filteredData = filteredData.filter(
-          (character) => character.vision === "Hydro"
-        );
-        break;
-      case "Electro":
-        filteredData = filteredData.filter(
-          (character) => character.vision === "Electro"
-        );
-        break;
-      case "Anemo":
-        filteredData = filteredData.filter(
-          (character) => character.vision === "Anemo"
-        );
-        break;
-      case "Cryo":
-        filteredData = filteredData.filter(
-          (character) => character.vision === "Cryo"
-        );
-        break;
-      case "Geo":
-        filteredData = filteredData.filter(
-          (character) => character.vision === "Geo"
-        );
-        break;
-      case "Dendro":
-        filteredData = filteredData.filter(
-          (character) => character.vision === "Dendro"
-        );
-        break;
-      case "Sword":
-        filteredData = filteredData.filter(
-          (character) => character.weapon === "Sword"
-        );
-        break;
-      case "Claymore":
-        filteredData = filteredData.filter(
-          (character) => character.weapon === "Claymore"
-        );
-        break;
-      case "Polearm":
-        filteredData = filteredData.filter(
-          (character) => character.weapon === "Polearm"
-        );
-        break;
-      case "Bow":
-        filteredData = filteredData.filter(
-          (character) => character.weapon === "Bow"
-        );
-        break;
-      case "Catalyst":
-        filteredData = filteredData.filter(
-          (character) => character.weapon === "Catalyst"
-        );
-        break;
-      case "Mondstadt":
-        filteredData = filteredData.filter(
-          (character) => character.nation === "Mondstadt"
-        );
-        break;
-      case "Liyue":
-        filteredData = filteredData.filter(
-          (character) => character.nation === "Liyue"
-        );
-        break;
-      case "Inazuma":
-        filteredData = filteredData.filter(
-          (character) => character.nation === "Inazuma"
-        );
-        break;
-      case "Sumeru":
-        filteredData = filteredData.filter(
-          (character) => character.nation === "Sumeru"
-        );
-        break;
-      default:
-        break;
+    let filteredData = [...someData];
+    let filterMode = [...event.target.value];
+    setFilterMode(filterMode);
+    if (filterMode.length > 0) {
+      filterMode.forEach((filter) => {
+        filteredData = filteredData.filter((character) => {
+          return character.rarity.toString() === filter.replace("*", "") ||
+            character.vision === filter ||
+            character.weapon === filter ||
+            character.nation === filter
+            ? true
+            : false;
+        });
+      });
     }
-    setFilteredData(filteredData);
+    setSomeData(filteredData);
     setFilterMode(event.target.value);
   }
 
-  // Handle sorting
+  // Handle sorting with single criteria
   function handleSort(event) {
-    let sortedData = [...allData];
+    let sortedData = [...someData];
     switch (event.target.value) {
       case "name":
         sortedData.sort((a, b) => a.name.localeCompare(b.name));
@@ -206,13 +133,13 @@ function App() {
       default:
         break;
     }
-    setFilteredData(sortedData);
+    setSomeData(sortedData);
     setSortMode(event.target.value);
   }
 
   // Reset all sorting and filtering
   function handleReset() {
-    setFilteredData(allData);
+    setSomeData(allData);
     setFilterMode([]);
     setSortMode("");
   }
@@ -264,7 +191,7 @@ function App() {
       </div>
       <div className="appContainer">
         <div className="characters">
-          {filteredData.map((item, index) => (
+          {someData.map((item, index) => (
             <Character
               key={index}
               item={item}
@@ -288,17 +215,18 @@ function App() {
               }}
               className="charButton"
             >
-              Reset Cart
+              Reset Wishlist
             </button>
             {wishlist.map((item, index) => {
+              // index = allData.indexOf(someData[index]);
               if (item > 0) {
                 return (
                   <p>
-                    {item}x {filteredData[index].name} {}
+                    {item}x {allData[index].name} {}
                     {/* Add a copy of a character to the wishlist */}
                     <button
                       onClick={() => {
-                        setTotal(total + filteredData[index].rarity);
+                        setTotal(total + allData[index].rarity);
                         setWishlist((wishlist) => {
                           let newWishlist = [...wishlist];
                           newWishlist[index] += 1;
@@ -313,7 +241,7 @@ function App() {
                     <button
                       onClick={() => {
                         if (wishlist[index] > 0) {
-                          setTotal(total - filteredData[index].rarity);
+                          setTotal(total - allData[index].rarity);
                         }
                         setWishlist((wishlist) => {
                           let newWishlist = [...wishlist];
