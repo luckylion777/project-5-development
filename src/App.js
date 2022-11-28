@@ -32,15 +32,17 @@ function App() {
    */
   const [wishlist, setWishlist] = useState([]);
   /**
-   * number of characters in the cart
+   * total rarity count of all characters in the cart
    * @type {[number, (value: number) => void]}
    */
   const [total, setTotal] = useState(0);
   /**
+   * array of applied filter criteria
    * @type {[string[], (value: string[]) => void]}
    */
   const [filterMode, setFilterMode] = useState([]);
   /**
+   * applied sort criteria
    * @type {[string, (value: string) => void]}
    */
   const [sortMode, setSortMode] = useState("");
