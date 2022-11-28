@@ -12,12 +12,37 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 
 function App() {
+  /**
+   * @type {[string[], (value: string[]) => void]}
+   */
   const [names, setNames] = useState([]);
+  /**
+   * unfiltered data
+   * @type {[{}[], (value: {}[]) => void]}
+   */
   const [allData, setAllData] = useState([]);
+  /**
+   * filtered data
+   * @type {[{}[], (value: {}[]) => void]}
+   */
   const [someData, setSomeData] = useState(allData);
+  /**
+   * unfiltered cart (count of each character in the cart)
+   * @type {[number[], (value: number[]) => void]}
+   */
   const [wishlist, setWishlist] = useState([]);
+  /**
+   * number of characters in the cart
+   * @type {[number, (value: number) => void]}
+   */
   const [total, setTotal] = useState(0);
+  /**
+   * @type {[string[], (value: string[]) => void]}
+   */
   const [filterMode, setFilterMode] = useState([]);
+  /**
+   * @type {[string, (value: string) => void]}
+   */
   const [sortMode, setSortMode] = useState("");
 
   const filters = [
@@ -201,7 +226,7 @@ function App() {
               item={item}
               wishlist={wishlist}
               setWishlist={setWishlist}
-              index={index}
+              index={allData.indexOf(item)}
               total={total}
               setTotal={setTotal}
             />
@@ -231,8 +256,7 @@ function App() {
               if (item > 0) {
                 return (
                   <p>
-                    {item}x {someData[index].name} {}
-                    {/* TODO: Fix bug where you can make count go negative */}
+                    {item}x {allData[index].name} {}
                     {/* Add a copy of a character to the wishlist */}
                     <button
                       onClick={() => {
@@ -252,12 +276,12 @@ function App() {
                       onClick={() => {
                         if (wishlist[index] > 0) {
                           setTotal(total - allData[index].rarity);
+                          setWishlist((wishlist) => {
+                            let newWishlist = [...wishlist];
+                            newWishlist[index] -= 1;
+                            return newWishlist;
+                          });
                         }
-                        setWishlist((wishlist) => {
-                          let newWishlist = [...wishlist];
-                          newWishlist[index] -= 1;
-                          return newWishlist;
-                        });
                       }}
                       className="charButton-remove"
                     >

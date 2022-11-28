@@ -11,12 +11,12 @@ export default function Character(props) {
   function removeFromWishlist() {
     if (props.wishlist[props.index] > 0) {
       props.setTotal(props.total - props.item.rarity);
+      props.setWishlist((wishlist) => {
+        let newWishlist = [...wishlist];
+        newWishlist[props.index] -= 1;
+        return newWishlist;
+      });
     }
-    props.setWishlist((wishlist) => {
-      let newWishlist = [...wishlist];
-      newWishlist[props.index] -= 1;
-      return newWishlist;
-    });
   }
 
   return (
